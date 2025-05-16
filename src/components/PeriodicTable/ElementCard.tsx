@@ -44,11 +44,11 @@ const ElementCard: React.FC<ElementCardProps> = ({
   const getStateIndicator = (state: string): string => {
     switch (state) {
       case 'solid':
-        return 'border-t-2 border-white';
+        return 'border-t-2 border-white/30';
       case 'liquid':
-        return 'border-t-2 border-blue-300';
+        return 'border-t-2 border-blue-300/50';
       case 'gas':
-        return 'border-t-2 border-green-300';
+        return 'border-t-2 border-green-300/50';
       default:
         return '';
     }
@@ -62,19 +62,38 @@ const ElementCard: React.FC<ElementCardProps> = ({
         ${getStateIndicator(element.state_at_room_temp)}
         flex flex-col items-center justify-center
         w-full h-16 sm:h-20
-        rounded-md shadow-md
+        rounded-lg
         cursor-pointer
         element-hover
-        transition-all duration-200
+        transition-all duration-300
+        backdrop-blur-sm
+        shadow-lg
+        relative
+        overflow-hidden
+        group
+        animate-fade-in
       `}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
-      <div className="text-xs leading-none opacity-70">{element.atomic_number}</div>
-      <div className="text-base sm:text-xl font-bold leading-none mt-1">{element.symbol}</div>
-      <div className="text-[9px] sm:text-[10px] truncate max-w-full px-1 mt-1 text-center leading-none">
-        {element.name}
+      {/* Background glow effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+      </div>
+
+      {/* Content with hover animation */}
+      <div className="relative z-10 transition-transform duration-300 group-hover:scale-105">
+        <div className="text-xs leading-none opacity-70 font-medium">{element.atomic_number}</div>
+        <div className="text-base sm:text-2xl font-bold leading-none mt-1 transition-all duration-300 group-hover:text-white">
+          {element.symbol}
+        </div>
+        <div className="text-[9px] sm:text-[10px] truncate max-w-full px-1 mt-1 text-center leading-none opacity-90 font-medium">
+          {element.name}
+        </div>
+        <div className="text-[8px] opacity-60 mt-1">
+          {element.atomic_mass.toFixed(1)}
+        </div>
       </div>
     </div>
   );
